@@ -443,6 +443,6 @@ https://user-images.githubusercontent.com/61022210/212534128-bc0e5779-a367-4d0a-
 
 • **Отзывы о ПО Snoop Project.**  
 <p align="center">  
-  <img src="https://raw.githubusercontent.com/snooppr/snoop/master/images/Reviews.png" />  
+  <img src="https://raw.githubusercontent.com/snooppr/snoop/master/images/Reviews.jpg" />  
 </p>
 </details>

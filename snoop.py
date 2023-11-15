@@ -163,6 +163,7 @@ def mem_test():
         else:
             return -1
 
+
 ## Вывести на печать инфостроки.
 def info_str(infostr, nick, color=True):
     if color is True:
@@ -184,6 +185,8 @@ def format_txt(text, k=False, m=False):
         return textwrap.fill(f"{gal}{text}", width=os.get_terminal_size()[0], subsequent_indent=ident_h, initial_indent=ident_e)
     except OSError:
         return "ERR"
+
+
 ## Вывести на печать ошибки.
 def print_error(websites_names, errstr, country_code, errX, verbose=False, color=True):
     if color is True:
@@ -258,6 +261,7 @@ def request_res(request_future, error_type, websites_names, timeout=None, norm=F
         pass
     return None, "Great Snoop returns None", "-"
 
+
 ## Сохранение отчетов опция (-S).
 def new_session(url, headers, executor2, requests_future, error_type, username, websites_names, r, t):
     """Если nickname найден, но актуальная html-страница находится дальше по редиректу,
@@ -319,8 +323,8 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
           print_found_only=False, timeout=None, color=True, cert=False, headerS=None):
 
     #requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL' #urllib3 v1.26.14
-    requests.packages.urllib3.disable_warnings()
     #adapter = requests.adapters.HTTPAdapter(pool_connections=1, pool_maxsize=0, max_retries=0, pool_block=True)
+    requests.packages.urllib3.disable_warnings()
     adapter = requests.adapters.HTTPAdapter()
     adapter.init_poolmanager(connections=200, maxsize=100, block=False, ssl_minimum_version=ssl.TLSVersion.TLSv1)
     requests_future = requests.Session()
@@ -343,10 +347,11 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
         info_str("разыскиваем:", username, color)
 
     if len(username) < 3:
-        console.print(f"⛔️ [bold red]nickname не может быть короче 3-х символов\nПропуск\n")
+        print(Style.BRIGHT + Fore.RED + format_txt("⛔️ nickname не может быть короче 3-х символов",
+                                                               k=True, m=True) + "\n   Пропуск\n")
         return False, False
     elif username in еasteregg:
-        with console.status("[bold blue]💡 Обнаружена пасхалка..."):
+        with console.status("[bold blue] 💡 Обнаружена пасхалка..."):
             try:
                 r_east = requests_future.get("https://raw.githubusercontent.com/snooppr/snoop/master/changelog.txt", timeout=timeout)
                 r_repo = requests_future.get('https://api.github.com/repos/snooppr/snoop', timeout=timeout).json()
@@ -381,22 +386,26 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
 
         for ermail_iter in ermail:
             if ermail_iter.lower() == username.lower():
-                print(f"\n{Style.BRIGHT}{Fore.RED}⛔️ Bad nickname: '{ermail_iter}' (обнаружен чистый домен)\nпропуск\n")
+                print("\n" + Style.BRIGHT + Fore.RED + format_txt("⛔️ Bad nickname: '{0}' (обнаружен чистый домен)".format(ermail_iter),
+                                                                  k=True, m=True) + "\n   пропуск\n")
                 return False, False
             elif ermail_iter.lower() in username.lower():
                 usernameR = username.rsplit(sep=ermail_iter.lower(), maxsplit=1)[1]
                 username = username.rsplit(sep='@', maxsplit=1)[0]
 
-                if len(username) == 0: username = usernameR
+                if len(username) == 0:
+                    username = usernameR
                 print(f"\n{Fore.CYAN}Обнаружен E-mail адрес, извлекаем nickname: '{Style.BRIGHT}{Fore.CYAN}{username}{Style.RESET_ALL}" + \
                       f"{Fore.CYAN}'\nsnoop способен отличать e-mail от логина, например, поиск '{username_bad}'\n" + \
                       f"не является валидной электропочтой, но может существовать как nickname, следовательно — не будет обрезан\n")
 
                 if len(username) == 0 and len(usernameR) == 0:
-                    print(f"\n{Style.BRIGHT}{Fore.RED}⛔️ Bad nickname: '{ermail_iter}' (обнаружен чистый домен)\nпропуск\n")
+                    print("\n" + Style.BRIGHT + Fore.RED + format_txt("⛔️ Bad nickname: '{0}' (обнаружен чистый домен)".format(ermail_iter),
+                                                                      k=True, m=True) + "\n   пропуск\n")
                     return False, False
                 elif len(username) != 0 and len(username) < 3:
-                    console.print(f"⛔️ [bold red]nickname не может быть короче 3-х символов\nПропуск\n")
+                    print(Style.BRIGHT + Fore.RED + format_txt("⛔️ nickname не может быть короче 3-х символов",
+                                                               k=True, m=True) + "\n   Пропуск\n")
                     return False, False
         del ermail
 
@@ -1513,7 +1522,8 @@ def run():
 ## Опция  '-w' не активна.
     try:
         if args.web is False:
-            print(f"\n{Fore.CYAN}загружена локальная база: {Style.BRIGHT}{Fore.CYAN}{len(BDdemo)}_Websites{Style.RESET_ALL}")
+            _DB = f"_[_{len(BDdemo_new)}_]" if len(BDdemo_new) != len(BDdemo) else ""
+            print(f"\n{Fore.CYAN}загружена локальная база: {Style.BRIGHT}{Fore.CYAN}{len(BDdemo)}_Websites{_DB}{Style.RESET_ALL}")
     except Exception:
         print("\033[31;1mInvalid загружаемая база данных.\033[0m")
 
@@ -1723,7 +1733,7 @@ f"""<p><span style="color: gray"><small><small>Отчёт создан в ПО S
 
             print(f"{Fore.CYAN}├─Результаты:{Style.RESET_ALL} найдено --> {len(find_url_lst)} url (сессия: {time_all}_сек__{s_size_all}_Mb)")
             print(f"{Fore.CYAN}├──Сохранено в:{Style.RESET_ALL} {direct_results}")
-            if flagBS_err >= 2:  #perc_%
+            if flagBS_err >= 2.5:  #perc_%
                 print(f"{Fore.CYAN}├───Дата поиска:{Style.RESET_ALL} {time.strftime('%d/%m/%Y_%H:%M:%S', time_date)}")
                 print(f"{Fore.CYAN}└────\033[31;1mВнимание! Bad_raw: {flagBS_err}% БД\033[0m")
                 print(f"{Fore.CYAN}     └─нестабильное соединение или I_Censorship")
@@ -1783,4 +1793,4 @@ if __name__ == '__main__':
         else:
             for child in active_children():
                 child.terminate()
-                time.sleep(0.1)
+                time.sleep(0.02)
