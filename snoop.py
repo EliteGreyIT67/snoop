@@ -324,9 +324,11 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
 
     #requests.packages.urllib3.util.ssl_.DEFAULT_CIPHERS += ':HIGH:!DH:!aNULL' #urllib3 v1.26.14
     #adapter = requests.adapters.HTTPAdapter(pool_connections=1, pool_maxsize=0, max_retries=0, pool_block=True)
+    connections = 200 if not Windows else 50
+    maxsize = 100 if not Windows else 30
     requests.packages.urllib3.disable_warnings()
     adapter = requests.adapters.HTTPAdapter()
-    adapter.init_poolmanager(connections=200, maxsize=100, block=False, ssl_minimum_version=ssl.TLSVersion.TLSv1)
+    adapter.init_poolmanager(connections=connections, maxsize=maxsize, block=False, ssl_minimum_version=ssl.TLSVersion.TLSv1)
     requests_future = requests.Session()
     requests_future.max_redirects = 6
     requests_future.verify = False if cert is False else True
@@ -446,7 +448,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
         if norm is False:
             tread__ = len(BDdemo_new) if len(BDdemo_new) < 15 else 15
         else:
-            tread__ = len(BDdemo_new) if len(BDdemo_new) < 20 else 20
+            tread__ = len(BDdemo_new) if len(BDdemo_new) < 18 else 18
         executor1 = ThreadPoolExecutor(max_workers=tread__)
     elif Linux:
         if norm is False:
@@ -549,10 +551,11 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
                                 "[progress.percentage]{task.percentage:>1.0f}%", BarColumn(bar_width=None, complete_style='cyan',
                                 finished_style='cyan bold'), refresh_per_second=3.0)  #transient=True) #исчезает прогресс
         else:
+            refresh_per_second = 3.0 if 'demo' in version else 1.0
             progress = Progress(TimeElapsedColumn(), "[progress.percentage]{task.percentage:>1.0f}%", BarColumn(bar_width=None,
-                                complete_style='cyan', finished_style='cyan bold'), refresh_per_second=3.0)  #auto_refresh=False)
+                                complete_style='cyan', finished_style='cyan bold'), refresh_per_second=refresh_per_second)
     else:
-        progress = Progress(TimeElapsedColumn(), "[progress.percentage]{task.percentage:>1.0f}%", auto_refresh=False)  #refresh_per_second=3
+        progress = Progress(TimeElapsedColumn(), "[progress.percentage]{task.percentage:>1.0f}%", auto_refresh=False)
 # Панель вербализации.
         if not Android:
             if color:
@@ -579,7 +582,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
             task0 = progress.add_task("", total=len(BDdemo_new))
         for websites_names, param_websites in BDdemo_new.items():  #БД:-скоррект.Сайт--> флаг,эмодзи,url, url_сайта, gray_lst, запрос-future
             if color is True:
-                progress.update(task0, advance=1, refresh=True)  #\nprogress.refresh()
+                progress.update(task0, advance=1, refresh=False)  #\nprogress.refresh()
 # Пропустить запрещенный никнейм или пропуск сайта из gray-list.
             if dic_snoop_full.get(websites_names).get("exists") is not None:
                 continue
