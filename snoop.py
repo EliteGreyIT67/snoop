@@ -271,7 +271,7 @@ def new_session(url, headers, executor2, requests_future, error_type, username, 
     future2 = executor2.submit(requests_future.get, url=url, headers=headers, allow_redirects=True, timeout=t)
     response = future2.result(t + 2)
 
-#ловушка на некот.сайтах (if response.content is not None ≠ if response.content)
+# Ловушка на некот.сайтах (if response.content is not None ≠ if response.content).
     if response.content is not None and response.encoding == 'ISO-8859-1':
         try:
             response.encoding = char_detect(response.content).get("encoding")
@@ -335,7 +335,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
     requests_future.mount('http://', adapter)
     requests_future.mount('https://', adapter)
 
-# Печать первой инфостроки.
+# Печать инфострок.
     еasteregg = ['Snoop', 'snoop', 'SNOOP',
                  'Snoop Project', 'snoop project', 'SNOOP PROJECT',
                  'Snoop_Project', 'snoop_project', 'SNOOP_PROJECT',
@@ -599,7 +599,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
                                                        print_found_only=print_found_only, verbose=verbose,
                                                        color=color, timeout=timeout, country_code=f" ~{country_code}")
 
-# Повторное сбойное соединение через новую сессию быстрее, чем через adapter.
+# Повторное сбойное соединение через новую сессию надежнее, чем через adapter.
             if norm is False and r == "FakeNone":
                 global recensor
                 head_duble = {'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8',
@@ -787,7 +787,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
 # Добавление результатов этого сайта в окончательный словарь со всеми другими результатами.
             dic_snoop_full[websites_names] = dic_snoop_full.get(websites_names)
 # не удерживать сокетом отработанное по всем п. соединение с сервером и предотвратить утечку памяти.
-            requests_future.close()
+            requests_future.close()  #не имеет смысла urllib3 v1.26.14+
             param_websites.pop("request_future", None)
 # Высвободить незначительную часть ресурсов.
         try:
@@ -863,7 +863,7 @@ def autoclean():
     sys.exit()
 
 
-## Лицензия/версия.
+## Лицензия/системная информация.
 def license_snoop():
     with open('COPYRIGHT', 'r', encoding="utf8") as copyright:
         wl = 4
@@ -974,7 +974,7 @@ def run():
     service_group.add_argument("--update", "-U", action="store_true", dest="update",
                                help="\033[36mО\033[0mбновить Snoop"
                               )
-# Plugins arguments arguments.
+# Plugins arguments.
     plugins_group = parser.add_argument_group('\033[36mplugins arguments\033[0m')
     plugins_group.add_argument("--module", "-m", action="store_true", dest="module", default=False,
                                help="\033[36mO\033[0mSINT поиск: задействовать различные плагины Snoop:: IP/GEO/YANDEX"
@@ -1150,7 +1150,7 @@ def run():
         sys.exit()
 
 
-## Опция  '-f' + "-v".
+## Опции  '-f' + "-v".
     if args.verbose is True and args.print_found_only is True:
         snoopbanner.logo(text=format_txt("⛔️ Режим подробной вербализации [опция '-v'] отображает детальную информацию " + \
                                          "[опция '-f'] неуместна", k=True, m=True))
@@ -1280,7 +1280,7 @@ def run():
         sys.exit()
 
 
-## Опция донат '-d y'.
+## Опция донат '-d'.
     if args.donation:
         print(Fore.CYAN + format_txt("активирована опция '-d': «финансовая поддержка проекта»", k=True))
         snoopbanner.donate()
@@ -1392,7 +1392,7 @@ def run():
 
 
 ## Проверка остальных (в т.ч. повтор) опций.
-## Опция '--update y' обновление Snoop.
+## Опция '--update' обновление Snoop.
     if args.update:
         print(Fore.CYAN + format_txt("активирована опция '-U': «обновление snoop»", k=True))
         update_snoop()
@@ -1420,7 +1420,7 @@ def run():
             sort_web_BDdemo_new[site] = BDdemo.get(site)
 
 
-## Функция для опций '-eo'.
+## Функция для опций '-ei'.
     def one_exl(one_exl_, bool_):
         lap = []
         bd_flag = []
@@ -1442,7 +1442,7 @@ def run():
         return lap, diff_list
 
 
-## Если опции '-seo' не указаны, то используем БД, как есть.
+## Если опции '-sei' не указаны, то используем БД, как есть.
     BDdemo_new = {}
     if args.site_list is None and args.exclude_country is None and args.one_level is None:
         BDdemo_new = BDdemo if len(BDdemo) < 404 else sys.exit()
