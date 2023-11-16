@@ -545,6 +545,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
 
 ## Прогресс_описание.
     if not verbose:
+        refresh = False
         if not Windows:
             spin_emoj = 'arrow3' if norm else random.choice(["dots", "dots12"])
             progress = Progress(TimeElapsedColumn(), SpinnerColumn(spinner_name=spin_emoj),
@@ -555,6 +556,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
             progress = Progress(TimeElapsedColumn(), "[progress.percentage]{task.percentage:>1.0f}%", BarColumn(bar_width=None,
                                 complete_style='cyan', finished_style='cyan bold'), refresh_per_second=refresh_per_second)
     else:
+        refresh = True
         progress = Progress(TimeElapsedColumn(), "[progress.percentage]{task.percentage:>1.0f}%", auto_refresh=False)
 # Панель вербализации.
         if not Android:
@@ -582,7 +584,7 @@ def snoop(username, BDdemo_new, verbose=False, norm=False, reports=False, user=F
             task0 = progress.add_task("", total=len(BDdemo_new))
         for websites_names, param_websites in BDdemo_new.items():  #БД:-скоррект.Сайт--> флаг,эмодзи,url, url_сайта, gray_lst, запрос-future
             if color is True:
-                progress.update(task0, advance=1, refresh=False)  #\nprogress.refresh()
+                progress.update(task0, advance=1, refresh=refresh)  #\nprogress.refresh()
 # Пропустить запрещенный никнейм или пропуск сайта из gray-list.
             if dic_snoop_full.get(websites_names).get("exists") is not None:
                 continue
