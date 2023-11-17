@@ -1780,7 +1780,7 @@ f"""<p><span style="color: gray"><small><small>Отчёт создан в ПО S
         try:
             hardware.shutdown()
         except Exception:
-            console.log(snoopbanner.err_all(err_="low"))
+            pass
 
 ## поиск по выбранным пользователям либо из cli, либо из файла.
     starts(args.username) if args.user is False else starts(USERLIST)
